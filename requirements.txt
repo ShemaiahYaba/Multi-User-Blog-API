@@ -9,3 +9,7 @@ bcrypt==4.1.2
 pydantic>=2.10.0
 pydantic[email]>=2.10.0
 python-dotenv==1.0.0
+flask-swagger-ui==4.11.1
+apispec==6.3.0
+apispec-webframeworks==0.5.2
+setuptools>=65.0.0

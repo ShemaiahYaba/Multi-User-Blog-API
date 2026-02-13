@@ -60,8 +60,8 @@ def register():
         )
         
         # Create JWT tokens
-        access_token = create_access_token(identity=user.id)
-        refresh_token = create_refresh_token(identity=user.id)
+        access_token = create_access_token(identity=str(user.id))
+        refresh_token = create_refresh_token(identity=str(user.id))
         
         # Build response
         response_data = TokenResponse(
@@ -116,8 +116,8 @@ def login():
         )
         
         # Create JWT tokens
-        access_token = create_access_token(identity=user.id)
-        refresh_token = create_refresh_token(identity=user.id)
+        access_token = create_access_token(identity=str(user.id))
+        refresh_token = create_refresh_token(identity=str(user.id))
         
         # Build response
         response_data = TokenResponse(
@@ -151,7 +151,7 @@ def refresh():
     """
     try:
         # Get user ID from refresh token
-        user_id = get_jwt_identity()
+        user_id = int(get_jwt_identity())
         
         # Verify user still exists and is active
         user = UserService.get_user_by_id(user_id)
@@ -160,7 +160,7 @@ def refresh():
             return create_error_response("Account is inactive", 401)
         
         # Create new access token
-        access_token = create_access_token(identity=user_id)
+        access_token = create_access_token(identity=str(user_id))
         
         return create_success_response(
             data={

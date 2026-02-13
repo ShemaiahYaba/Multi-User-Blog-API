@@ -5,11 +5,36 @@ Provides different configurations for development, testing, and production.
 """
 
 import os
+import re
 from datetime import timedelta
 from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
+
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+
+def _normalize_database_url(database_url: str) -> str:
+    """
+    Normalize local SQLite URLs to absolute filesystem paths.
+
+    Flask treats relative sqlite URLs as relative to app.instance_path, which can
+    be unwritable in some environments. This keeps sqlite DB files in the project.
+    """
+    if not database_url.startswith("sqlite:///"):
+        return database_url
+
+    sqlite_target = database_url.replace("sqlite:///", "", 1)
+    if sqlite_target == ":memory:":
+        return database_url
+
+    # Already absolute: unix-like path (/...), windows drive (C:/...), or URI path.
+    if sqlite_target.startswith("/") or re.match(r"^[A-Za-z]:[\\/]", sqlite_target):
+        return database_url
+
+    absolute_path = os.path.abspath(os.path.join(BASE_DIR, sqlite_target))
+    return f"sqlite:///{absolute_path.replace(os.sep, '/')}"
 
 
 class Config:
@@ -21,7 +46,9 @@ class Config:
     TESTING = False
     
     # Database
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'sqlite:///blog.db')
+    SQLALCHEMY_DATABASE_URI = _normalize_database_url(
+        os.environ.get('DATABASE_URL', 'sqlite:///blog.db')
+    )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = False
     

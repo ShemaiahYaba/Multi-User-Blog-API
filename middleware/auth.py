@@ -33,7 +33,7 @@ def get_current_user() -> User:
         verify_jwt_in_request()
         
         # Get user ID from JWT
-        user_id = get_jwt_identity()
+        user_id = int(get_jwt_identity())
         
         # Fetch user from database
         from database import db
