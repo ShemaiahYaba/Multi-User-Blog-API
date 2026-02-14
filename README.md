@@ -17,7 +17,7 @@ This project demonstrates professional backend development with:
 
 ## 📁 Project Structure
 
-```
+```python
 blog-api/
 ├── app.py                      # Application factory
 ├── config/                     # App configuration modules
@@ -147,6 +147,7 @@ pytest -m integration # Only integration tests
 ### Authentication (`/auth`)
 
 #### Register
+
 ```bash
 POST /auth/register
 Content-Type: application/json
@@ -178,6 +179,7 @@ Response (201):
 ```
 
 #### Login
+
 ```bash
 POST /auth/login
 Content-Type: application/json
@@ -191,6 +193,7 @@ Response (200): Same as register
 ```
 
 #### Refresh Token
+
 ```bash
 POST /auth/refresh
 Authorization: Bearer <refresh_token>
@@ -209,6 +212,7 @@ Response (200):
 ### Users (`/users`)
 
 #### Get Profile
+
 ```bash
 GET /users/me
 Authorization: Bearer <access_token>
@@ -228,6 +232,7 @@ Response (200):
 ```
 
 #### Update Profile
+
 ```bash
 PUT /users/me
 Authorization: Bearer <access_token>
@@ -242,6 +247,7 @@ Content-Type: application/json
 ### Posts (`/posts`)
 
 #### List Posts (Public)
+
 ```bash
 GET /posts?page=1&per_page=10
 
@@ -259,6 +265,7 @@ Response (200):
 ```
 
 #### Get Post (Public)
+
 ```bash
 GET /posts/1
 
@@ -281,6 +288,7 @@ Response (200):
 ```
 
 #### Create Post (Authenticated)
+
 ```bash
 POST /posts
 Authorization: Bearer <access_token>
@@ -295,6 +303,7 @@ Response (201): Full post object
 ```
 
 #### Update Post (Owner Only)
+
 ```bash
 PUT /posts/1
 Authorization: Bearer <access_token>
@@ -310,6 +319,7 @@ Response (403): If not owner
 ```
 
 #### Delete Post (Owner or Admin)
+
 ```bash
 DELETE /posts/1
 Authorization: Bearer <access_token>
@@ -321,6 +331,7 @@ Response (403): If not owner (unless admin)
 ## 🔐 Security Features
 
 ### Password Requirements
+
 - Minimum 8 characters
 - At least one uppercase letter
 - At least one lowercase letter
@@ -328,12 +339,14 @@ Response (403): If not owner (unless admin)
 - At least one special character
 
 ### JWT Tokens
+
 - **Access Token**: Short-lived (15 minutes)
 - **Refresh Token**: Long-lived (7 days)
 - Tokens include user ID as identity
 - Automatic expiration handling
 
 ### Database Constraints
+
 ```sql
 -- Username constraints
 CHECK (length(username) >= 3)
@@ -351,23 +364,25 @@ CHECK (role IN ('user', 'admin'))
 
 ### Authorization Rules
 
-| Action | User | Admin |
-|--------|------|-------|
-| View posts | ✅ Public | ✅ Public |
-| Create post | ✅ Auth required | ✅ Auth required |
-| Update own post | ✅ Yes | ✅ Yes |
-| Update other's post | ❌ No | ❌ No |
-| Delete own post | ✅ Yes | ✅ Yes |
-| Delete any post | ❌ No | ✅ Yes |
+| Action              | User             | Admin            |
+| ------------------- | ---------------- | ---------------- |
+| View posts          | ✅ Public        | ✅ Public        |
+| Create post         | ✅ Auth required | ✅ Auth required |
+| Update own post     | ✅ Yes           | ✅ Yes           |
+| Update other's post | ❌ No            | ❌ No            |
+| Delete own post     | ✅ Yes           | ✅ Yes           |
+| Delete any post     | ❌ No            | ✅ Yes           |
 
 ## 🧪 Testing
 
 ### Test Coverage
+
 - Unit tests: Security, validation, business logic
 - Integration tests: Full request/response cycles
 - Target coverage: 90%+
 
 ### Run Tests
+
 ```bash
 # All tests with coverage
 pytest --cov
@@ -384,67 +399,21 @@ open htmlcov/index.html
 ```
 
 ### Sample Test Data
+
 After running `python db/seed.py`:
 
-```
+```markdown
 Users:
+
 - admin / Admin123! (admin role)
 - john_doe / Password123! (user role)
 - jane_smith / Password123! (user role)
 - bob_wilson / Password123! (user role)
 
 Posts:
+
 - 10 blog posts across all users
 ```
-
-## 🎓 Week 4 Learning Objectives
-
-### ✅ Completed
-
-**Authentication:**
-- [x] User registration with validation
-- [x] Login with JWT token generation
-- [x] Token refresh mechanism
-- [x] Password hashing (bcrypt)
-
-**Authorization:**
-- [x] Protected routes with decorators
-- [x] Ownership-based permissions
-- [x] Role-based access control (RBAC)
-- [x] Admin override permissions
-
-**Security:**
-- [x] Password strength validation
-- [x] SQL injection prevention (SQLAlchemy)
-- [x] Input sanitization (Pydantic)
-- [x] CORS configuration
-- [x] Environment variables for secrets
-- [x] Database-level constraints
-
-**Architecture:**
-- [x] Pydantic schema layer (Week 3 feedback)
-- [x] Database constraints (Week 3 feedback)
-- [x] Automated tests 90%+ (Week 3 feedback)
-
-## 🚦 Next Steps
-
-### Week 5 Preview - Deployment
-- Containerization with Docker
-- Environment configuration
-- Production database setup
-- CI/CD pipeline
-- Monitoring and logging
-
-### Potential Enhancements
-- [ ] Email verification
-- [ ] Password reset flow
-- [ ] Rate limiting
-- [ ] API documentation (Swagger/OpenAPI)
-- [ ] File uploads (profile pictures, images)
-- [ ] Post comments
-- [ ] Post likes/reactions
-- [ ] User follow system
-- [ ] Search functionality
 
 ## 📝 Environment Variables
 
@@ -472,11 +441,13 @@ CORS_ORIGINS=http://localhost:3000
 ## 🐛 Common Issues
 
 ### Issue: Module not found
+
 ```bash
 pip install -r requirements.txt
 ```
 
 ### Issue: Database locked (SQLite)
+
 ```bash
 # Delete database and recreate
 rm blog.db
@@ -485,6 +456,7 @@ python db/seed.py
 ```
 
 ### Issue: JWT decode error
+
 ```bash
 # Set JWT_SECRET_KEY in .env
 JWT_SECRET_KEY=a-very-secret-key-change-this
@@ -498,20 +470,3 @@ JWT_SECRET_KEY=a-very-secret-key-change-this
 - [SQLAlchemy](https://docs.sqlalchemy.org/)
 - [Pytest](https://docs.pytest.org/)
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
-
-## 🎉 Summary
-
-This Week 4 project demonstrates:
-- Production-ready authentication system
-- Clean, testable architecture
-- Security best practices
-- Comprehensive testing
-- All improvements from Week 3 feedback
-
-**Total Files Created**: 38
-**Lines of Code**: ~3000+
-**Test Coverage**: 90%+
-**Security Features**: 10+
-**Architecture Layers**: 7
-
-Ready for Week 5: Deployment! 🚀
