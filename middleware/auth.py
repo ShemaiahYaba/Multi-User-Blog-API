@@ -15,7 +15,7 @@ from flask_jwt_extended import (
     get_jwt
 )
 from models import User
-from exceptions import AuthenticationError, AuthorizationError, UserNotFoundError
+from config import AuthenticationError, AuthorizationError, UserNotFoundError
 
 
 def get_current_user() -> User:
@@ -36,7 +36,7 @@ def get_current_user() -> User:
         user_id = int(get_jwt_identity())
         
         # Fetch user from database
-        from database import db
+        from db import db
         user = db.session.get(User, user_id)
         
         if not user:

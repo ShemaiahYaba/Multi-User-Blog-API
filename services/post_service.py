@@ -9,10 +9,10 @@ Business logic for:
 """
 
 from sqlalchemy.exc import SQLAlchemyError
-from database import db
+from db import db
 from models import Post, User
 from utils.validators import validate_pagination
-from exceptions import (
+from config import (
     PostNotFoundError,
     AuthorizationError,
     DatabaseError,

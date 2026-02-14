@@ -187,7 +187,7 @@ class TestPagination:
         # Create multiple posts
         with app.app_context():
             from models import User, Post
-            from database import db
+            from db import db
             from utils.security import hash_password
             
             user = User(

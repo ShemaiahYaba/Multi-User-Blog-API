@@ -10,7 +10,7 @@ Provides fixtures for:
 
 import pytest
 from app import create_app
-from database import db
+from db import db
 from models import User, Post
 from utils.security import hash_password
 

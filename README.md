@@ -20,9 +20,17 @@ This project demonstrates professional backend development with:
 ```
 blog-api/
 ├── app.py                      # Application factory
-├── config.py                   # Configuration (dev, test, prod)
-├── database.py                 # SQLAlchemy setup
-├── exceptions.py               # Custom exceptions
+├── config/                     # App configuration modules
+│   ├── __init__.py
+│   ├── settings.py             # Configuration (dev, test, prod)
+│   ├── exceptions.py           # Custom exceptions
+│   ├── rate_limit.py           # Rate limiting setup
+│   └── swagger.py              # OpenAPI/Swagger docs
+│
+├── db/                         # Database layer
+│   ├── __init__.py
+│   ├── database.py             # SQLAlchemy setup
+│   └── seed.py                 # Sample data
 │
 ├── models/                     # Database models
 │   ├── __init__.py
@@ -71,7 +79,6 @@ blog-api/
 ├── requirements.txt            # Production dependencies
 ├── requirements-dev.txt        # Development dependencies
 ├── pytest.ini                  # Pytest configuration
-├── seed.py                     # Sample data
 ├── .env.example               # Environment template
 └── README.md                  # This file
 ```
@@ -107,7 +114,7 @@ flask db migrate -m "Initial migration"
 flask db upgrade
 
 # Seed database (optional)
-python seed.py
+python db/seed.py
 ```
 
 ### 3. Run Application
@@ -377,7 +384,7 @@ open htmlcov/index.html
 ```
 
 ### Sample Test Data
-After running `python seed.py`:
+After running `python db/seed.py`:
 
 ```
 Users:
@@ -448,7 +455,7 @@ DEBUG=True
 PORT=5000
 
 # Database
-DATABASE_URL=sqlite:///blog.db
+DATABASE_URL=sqlite:///instance/blog.db
 
 # JWT
 JWT_SECRET_KEY=your-secret-key-here
@@ -474,7 +481,7 @@ pip install -r requirements.txt
 # Delete database and recreate
 rm blog.db
 flask db upgrade
-python seed.py
+python db/seed.py
 ```
 
 ### Issue: JWT decode error

@@ -2,7 +2,7 @@
 Validation utilities - Helper functions for input validation
 """
 
-from exceptions import ValidationError
+from config import ValidationError
 
 
 def validate_pagination(page: int = None, per_page: int = None) -> tuple:

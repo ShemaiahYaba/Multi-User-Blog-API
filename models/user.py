@@ -8,7 +8,7 @@ Features:
 - Relationships with posts
 """
 
-from database import db
+from db import db
 from .mixins import TimestampMixin
 
 

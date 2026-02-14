@@ -18,7 +18,7 @@ from services import PostService
 from schemas import PostCreate, PostUpdate, PostResponse, PostBrief, PaginatedResponse
 from utils import create_success_response, create_error_response
 from middleware import jwt_required, get_current_user
-from exceptions import (
+from config import (
     PostNotFoundError,
     AuthenticationError,
     AuthorizationError,

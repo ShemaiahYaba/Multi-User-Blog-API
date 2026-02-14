@@ -5,6 +5,8 @@ Endpoints:
 - POST /auth/register - Create new user account
 - POST /auth/login - Login and get JWT tokens  
 - POST /auth/refresh - Get new access token using refresh token
+
+Rate limits applied to prevent brute force attacks.
 """
 
 from flask import Blueprint, request
@@ -19,20 +21,25 @@ from pydantic import ValidationError as PydanticValidationError
 from services import AuthService, UserService
 from schemas import UserRegister, UserLogin, TokenResponse, UserResponse
 from utils import create_success_response, create_error_response
-from exceptions import (
+from config import (
     AuthenticationError,
     DuplicateUserError,
     DatabaseError,
     ValidationError
 )
+from config import get_limiter
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
+limiter = get_limiter()
 
 
 @auth_bp.route('/register', methods=['POST'])
+@limiter.limit("5 per hour") if limiter else lambda f: f
 def register():
     """
     Register a new user
+    
+    Rate limit: 5 registrations per hour per IP
     
     Request body:
         {
@@ -44,6 +51,7 @@ def register():
     Returns:
         201: User created with tokens
         400: Validation error or duplicate user
+        429: Rate limit exceeded
     """
     if not request.is_json:
         return create_error_response("Content-Type must be application/json", 400)
@@ -88,9 +96,12 @@ def register():
 
 
 @auth_bp.route('/login', methods=['POST'])
+@limiter.limit("10 per hour") if limiter else lambda f: f
 def login():
     """
     Login user and return JWT tokens
+    
+    Rate limit: 10 login attempts per hour per IP (prevents brute force)
     
     Request body:
         {
@@ -101,6 +112,7 @@ def login():
     Returns:
         200: Login successful with tokens
         401: Invalid credentials
+        429: Rate limit exceeded
     """
     if not request.is_json:
         return create_error_response("Content-Type must be application/json", 400)

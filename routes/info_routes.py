@@ -7,7 +7,7 @@ Endpoints:
 """
 
 from flask import Blueprint, jsonify
-from database import db
+from db import db
 
 info_bp = Blueprint('info', __name__)
 

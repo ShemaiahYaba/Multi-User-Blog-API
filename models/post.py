@@ -7,7 +7,7 @@ Features:
 - Indexes for performance
 """
 
-from database import db
+from db import db
 from .mixins import TimestampMixin
 
 

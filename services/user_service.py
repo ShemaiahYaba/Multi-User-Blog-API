@@ -8,10 +8,10 @@ Business logic for:
 """
 
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
-from database import db
+from db import db
 from models import User
 from utils.security import hash_password
-from exceptions import (
+from config import (
     UserNotFoundError,
     DuplicateUserError,
     DatabaseError

@@ -7,8 +7,16 @@ Creates:
 - 10 blog posts
 """
 
+from pathlib import Path
+import sys
+
+# Allow direct execution (`python db/seed.py`) by exposing project root on sys.path.
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 from app import create_app
-from database import db
+from db import db
 from models import User, Post
 from utils.security import hash_password
 

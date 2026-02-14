@@ -12,7 +12,8 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+# Keep relative paths anchored at the project root after moving into config/.
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 
 def _normalize_database_url(database_url: str) -> str:
@@ -47,7 +48,7 @@ class Config:
     
     # Database
     SQLALCHEMY_DATABASE_URI = _normalize_database_url(
-        os.environ.get('DATABASE_URL', 'sqlite:///blog.db')
+        os.environ.get('DATABASE_URL', 'sqlite:///instance/blog.db')
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = False
@@ -65,6 +66,13 @@ class Config:
     
     # CORS
     CORS_ORIGINS = os.environ.get('CORS_ORIGINS', '*').split(',')
+    
+    # Rate Limiting
+    RATELIMIT_ENABLED = os.environ.get('RATE_LIMIT_ENABLED', 'False').lower() == 'true'
+    RATELIMIT_STORAGE_URI = "memory://"  # Use memory for simple apps, Redis for production
+    RATELIMIT_STRATEGY = "fixed-window"
+    RATELIMIT_DEFAULT = "100 per hour"  # Default limit for all routes
+    RATELIMIT_HEADERS_ENABLED = True  # Include rate limit info in headers
     
     # Pagination
     DEFAULT_PAGE_SIZE = 10
@@ -84,6 +92,7 @@ class TestingConfig(Config):
     BCRYPT_LOG_ROUNDS = 4  # Faster for tests
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=5)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=1)
+    RATELIMIT_ENABLED = False  # Disable rate limiting in tests
 
 
 class ProductionConfig(Config):
